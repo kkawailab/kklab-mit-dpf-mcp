@@ -4,7 +4,7 @@
       "command": "uv",
       "args": [
         "--directory",
-        "/home/katzkawai/kklab-mit-dpf-mcp",
+        "/home/katzkawai/kklab-mlit-dpf-mcp",
         "run",
         "python",
         "-m",
