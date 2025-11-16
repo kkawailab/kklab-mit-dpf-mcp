@@ -19,6 +19,3 @@ dependencies = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-q"
-
-[tool.claude.mcp]
-servers = { mlit-dpf-mcp = { command = "./.venv/bin/python", args = ["./src/server.py"], env = { PYTHONUNBUFFERED = "1", LOG_LEVEL = "WARNING" } } }

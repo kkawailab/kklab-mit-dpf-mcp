@@ -1,5 +1,10 @@
 # MLIT DATA PLATFORM MCP Server
 
+> **⚠️ 重要な免責事項**
+> 本リポジトリは、国土交通省の公式リポジトリ [mlit-dpf-mcp](https://github.com/MLIT-DATA-PLATFORM/mlit-dpf-mcp) を利用して作成された非公式のアプリケーションです。
+> **国土交通省の認可や承認を受けたものではありません。**
+> 本リポジトリの利用により生じたいかなる損失及び障害等について、作成者は責任を負わないものとします。
+
 ## 目次
 - [MLIT DATA PLATFORM MCP Server](#mlit-data-platform-mcp-server)
   - [目次](#目次)
@@ -20,9 +25,14 @@
 
 
 ## 1. 概要
-国土交通省が保有するデータと民間等のデータを連携し、一元的に検索・表示・ダウンロードを可能にする[国土交通データプラットフォーム](https://www.mlit-data.jp/)が提供する利用者向けAPIと接続するMCP (Model Context Protocol) サーバー（α版）です。
+
+本リポジトリは、国土交通省の公式リポジトリ [mlit-dpf-mcp](https://github.com/MLIT-DATA-PLATFORM/mlit-dpf-mcp) をベースに作成された**非公式**のMCP (Model Context Protocol) サーバーです。
+
+国土交通省が保有するデータと民間等のデータを連携し、一元的に検索・表示・ダウンロードを可能にする[国土交通データプラットフォーム](https://www.mlit-data.jp/)が提供する利用者向けAPIと接続します。
 
 本MCPサーバーを利用することで、大規模言語モデル（LLM）と直接連携し、対話形式で直感的にデータを検索・取得することが可能になります。APIに関する専門的な知識がなくても、誰でも簡単に国土交通データプラットフォームから曖昧な指示や複雑な条件設定でデータを検索・取得が可能な、新しいデータ活用のかたちを提供します。
+
+**⚠️ 本リポジトリは国土交通省の認可や承認を受けたものではありません。個人が作成した非公式のアプリケーションです。**
 
 
 ## 2. 主な機能
@@ -178,17 +188,13 @@ uv pip install -e .
 pip install -e .
 ```
 
-**3. Claude Code用の設定ファイルを作成**
+**3. MCP設定ファイルを作成**
 
-プロジェクトのルートディレクトリに `.claude/mcp_settings.json` ファイルを作成します（既に`.claude`ディレクトリがある場合は、その中に作成）：
-
-```bash
-mkdir -p .claude
-```
+プロジェクトのルートディレクトリに `.mcp.json` ファイルを作成します：
 
 **4. MCP設定を記述**
 
-`.claude/mcp_settings.json` に以下の内容を記述します：
+`.mcp.json` に以下の内容を記述します：
 
 ```json
 {
@@ -215,8 +221,10 @@ mkdir -p .claude
 **重要な設定項目:**
 - `"/絶対パス/mlit-dpf-mcp"`: このリポジトリの絶対パスに置き換えてください
   - Linux/macOS例: `"/home/username/mlit-dpf-mcp"`
-  - Windows例: `"C:/Users/username/mlit-dpf-mcp"`
+  - Windows例: `"C:/Users/username/mlit-dpf-mcp"` (スラッシュを使用)
 - `"your_api_key_here"`: 取得したAPIキーに置き換えてください
+
+**注意:** `.mcp.json` はプロジェクトのルートディレクトリに配置してください（`.claude/` ディレクトリ内ではありません）
 
 **5. VS Codeでプロジェクトを開く**
 
@@ -236,7 +244,7 @@ Claude Codeのチャット画面で、MCPツールが利用可能になってい
 
 **MCPサーバーが起動しない場合:**
 
-1. `.claude/mcp_settings.json` のパスが正しいか確認
+1. `.mcp.json` のパスが正しいか確認（プロジェクトルートに配置されているか）
 2. APIキーが正しく設定されているか確認
 3. VS Codeの出力パネル（Output Panel）で「Claude Code」を選択し、エラーログを確認
 
@@ -364,7 +372,7 @@ VS Codeの出力パネル（Output）で「Claude Code」を選択し、エラ�
 **症状：** `MLIT_API_KEY is not set` などのエラーメッセージ
 
 **解決方法：**
-- `.claude/mcp_settings.json`（Claude Code）または`claude_desktop_config.json`（Claude Desktop）で、`MLIT_API_KEY`が正しく設定されているか確認
+- `.mcp.json`（Claude Code）または`claude_desktop_config.json`（Claude Desktop）で、`MLIT_API_KEY`が正しく設定されているか確認
 - APIキーに余分なスペースや引用符が含まれていないか確認
 - 国土交通データプラットフォームでAPIキーが有効か確認
 
@@ -415,7 +423,7 @@ pip install folium
 }
 ```
 
-**Claude Code（`.claude/mcp_settings.json`）：**
+**Claude Code（`.mcp.json`）：**
 ```json
 "env": {
   "LOG_LEVEL": "DEBUG"
@@ -441,8 +449,9 @@ python -m src.server
 
 ```
 mlit-dpf-mcp/
-├─ .claude/                      # Claude Code設定ディレクトリ
-│  └─ mcp_settings.json          # MCP設定ファイル（Claude Code用）
+├─ .mcp.json                     # MCP設定ファイル（Claude Code用）
+├─ .claude/                      # Claude Code設定ディレクトリ（権限設定など）
+│  └─ settings.local.json        # ツール権限設定ファイル
 ├─ src/
 │  ├─ server.py                  # MCP サーバー & ツール定義
 │  ├─ client.py                  # MLIT GraphQL API クライアント
@@ -469,16 +478,30 @@ mlit-dpf-mcp/
 
 ## 9. 注意事項
 
+### 非公式リポジトリについて
+* **本リポジトリは、国土交通省の公式リポジトリ [mlit-dpf-mcp](https://github.com/MLIT-DATA-PLATFORM/mlit-dpf-mcp) をベースに作成された非公式のアプリケーションです。**
+* **国土交通省の認可、承認、推奨を受けたものではありません。**
+* **本リポジトリは個人が作成したものであり、国土交通省および国土交通データプラットフォームとは一切関係ありません。**
+
+### データ利用について
 * 本リポジトリで提供されるデータの利用に関しては、 [国土交通データプラットフォームの利用規約](https://www.mlit-data.jp/assets/policy/%E5%9B%BD%E5%9C%9F%E4%BA%A4%E9%80%9A%E3%83%87%E3%83%BC%E3%82%BF%E3%83%97%E3%83%A9%E3%83%83%E3%83%88%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84.pdf)に従う必要があります。ご使用前に国土交通データプラットフォームの利用規約を必ずご確認ください。
-* 本リポジトリの個人情報の取り扱いは、[国土交通データプラットフォームのプライバシーポリシー](https://www.mlit-data.jp/assets/policy/%E5%9B%BD%E5%9C%9F%E4%BA%A4%E9%80%9A%E3%83%87%E3%83%BC%E3%82%BF%E3%83%97%E3%83%A9%E3%83%83%E3%83%88%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0_%E3%83%97%E3%83%A9%E3%82%A4%E3%83%90%E3%82%B7%E3%83%BC%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC.pdf)に準拠しております。
-* 本リポジトリはα版として提供しているものです。動作保証は行っておりません。
+* 本リポジトリの個人情報の取り扱いは、[国土交通データプラットフォームのプライバシーポリシー](https://www.mlit-data.jp/assets/policy/%E5%9B%BD%E5%9C%9F%E4%BA%A4%E9%80%9A%E3%83%87%E3%83%BC%E3%82%BF%E3%83%97%E3%83%A9%E3%83%83%E3%83%88%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A0_%E3%83%97%E3%83%A9%E3%82%A4%E3%83%90%E3%82%B7%E3%83%BC%E3%83%9D%E3%83%AA%E3%82%B7%E3%83%BC.pdf)に準拠する必要があります。
+
+### 免責事項
+* 本リポジトリは非公式のアプリケーションとして提供しているものです。動作保証は行っておりません。
 * 本リポジトリの内容は予告なく変更・削除する可能性があります。
-* 本リポジトリの利用により生じた損失及び障害等について、国土交通省及び国土交通データプラットフォームはいかなる責任も負わないものとします。
+* 本リポジトリの利用により生じた損失及び障害等について、作成者は一切の責任を負わないものとします。
+* 本リポジトリに関する問い合わせを国土交通省または国土交通データプラットフォームに行わないでください。
 
 ---
 
 ## 10. お問い合わせ
 
-本リポジトリはα版です。お気づきの点があれば下記お問い合わせフォームまでご連絡下さい。
+本リポジトリは非公式のアプリケーションです。
 
+* **本リポジトリに関する問い合わせは、GitHubのIssuesまでお願いします。**
+* **国土交通省または国土交通データプラットフォームへの問い合わせは行わないでください。**
+
+国土交通データプラットフォームの公式リポジトリや利用者向けAPIに関する問い合わせは、以下の公式チャンネルをご利用ください：
+* [国土交通データプラットフォーム公式リポジトリ](https://github.com/MLIT-DATA-PLATFORM/mlit-dpf-mcp)
 * [国土交通データプラットフォームお問い合わせフォーム](https://docs.google.com/forms/d/e/1FAIpQLScHlMUInwpoyREX672SFJuwo8ZfpllQUatPuYNRiKYZkoe6nQ/viewform)

@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "mlit-dpf-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/home/katzkawai/kklab-mit-dpf-mcp",
+        "run",
+        "python",
+        "-m",
+        "src.server"
+      ],
+      "env": {
+        "MLIT_API_KEY": "your_api_key_here",
+        "MLIT_BASE_URL": "https://www.mlit-data.jp/api/v1/",
+        "PYTHONUNBUFFERED": "1",
+        "LOG_LEVEL": "WARNING"
+      }
+    }
+  }
+}
